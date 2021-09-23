@@ -63,10 +63,8 @@ class PySentiStrength():
         -----
             str, Resultado do balanço: impartial / partial
         """
-        
-        scoreBalance = positive + negative
 
-        if (scoreBalance == 0):
+        if (positive < 3 and negative > -3):
             return "impartial"
         else:
             return "partial"

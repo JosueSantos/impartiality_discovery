@@ -49,9 +49,19 @@ Logo após, os Spiders são executados, onde vasculham cada uma das URLs dispon�
 
 Ao término da raspagem deve ser executado o **scriptBuildData.py** que  coleta os arquivos CSV obtidos pelos crawlers e recolhe as informações. Realiza a analise da SentiStrength para cada uma das entradas.
 
-Com o método **PySentiStrength.scoreClassifier()** classifica as notícias como imparciais se estiverem em equilibrio entre os pesos positivos e negativos obtidos pelo SentiStrength
+### SentiStrength
 
-Gerando como resultado de três arquivos CSV:
+A ferramenta SentiStrength possui um dicionário léxico que atribui as palavras com emoções positivas valores entre 1 e 5 e a palavras com emoções negativas valores entre -5 e -1. Analisando a sentença que recebe, a divide em tokens e para cada palavra que transmite uma emoção é atribuída uma pontuação determinada. Após pontuar todas as palavras, a ferramenta retorna a pontuação máxima dos sentimentos negativos e a pontuação máxima dos sentimentos positivos.
+
+### OpLexicon V3.0
+
+Foi realizado um acréscimo ao dicionário léxico da ferramenta SentiStrength, com a mesclagem de sua base com a do OpLexicon, também conhecido como Sentiment Lexicon, que consiste de uma lista de palavras rotuladas como positivas e negativas, incluindo gírias e abreviações no idioma Inglês. Este é um método léxico criado a partir de textos coletados em reviews de produtos em sites de compra.
+
+### PySentiStrength.scoreClassifier()
+
+Com o método **PySentiStrength.scoreClassifier()** classifica as notícias como imparciais se estiverem próximas a neutralidade (+2 | -2) entre os pesos positivos e negativos obtidos pelo SentiStrength, levando em consideração que o limite dos valores das emoções é +5 e -5.
+
+Gerando como resultado três arquivos CSV:
 
  - *Base.BASE*
  - *Base.BASE_IMPARTIAL*
@@ -81,11 +91,6 @@ Estes dados rotulados serão utilizados para fazer com que o algoritmo aprenda o
 ## Preparação para o Modelo
 
 A biblioteca NLTK (Natural Language Toolkit) já vem com funções preparadas que auxiliam a deixar a codificação mais prática e tira a necessidade de fazer os cálculos manualmente.
-
-Para utilizar o NLTK, utilize o comando prompt de comando:
-```
-pip install nltk
-```
 
 O script **scriptClassifier.py** deve ser executado para iniciar o modelo.
 
