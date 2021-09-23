@@ -1,14 +1,15 @@
 # coding: utf-8
 
+import re
 import nltk
 from nltk.classify.naivebayes import NaiveBayesClassifier
 from nltk.collections import LazyMap
 from nltk.stem.rslp import RSLPStemmer
 from nltk.corpus import stopwords
 from nltk.probability import DictionaryProbDist, FreqDist
-import re
 
 from classifier.ClassifierModel import ClassifierModel
+
 
 class ClassifierController():
     """
@@ -202,4 +203,3 @@ class ClassifierController():
             characteristics['%s' % words] = (words in document)
 
         return characteristics
-

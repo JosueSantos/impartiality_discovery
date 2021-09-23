@@ -19,9 +19,15 @@ Um classificador é denominado **supervisionado** se for construído com base em
 
 ## Coleta de Dados
 
-Antes da execução do script é necessário existir uma lista de URL's de notícias do Diário do Nordeste em formato CSV no caminho: **files/extractor/urls_dn.csv**.
+Executando o **scriptUpdateURLs.py**, ele irá executar os cralwers necessários para a captura das url's das notícias dos sites Diário do Nordeste, G1 e O Povo, removendo as url's duplicadas e salvando o progresso nos arquivos CSV no caminho:
 
-Após a criação desta lista de URL's o script **scriptExtractor.py** deve ser executado para iniciar a coleta dos dados.
+ - **files/extractor/diarioDoNordeste/urls_dn.csv**
+ - **files/extractor/g1Ceara/urls_g1.csv**
+ - **files/extractor/oPovo/urls_op.csv**
+
+Esta etapa deve se repetir diariamente até ser capturada uma grande quantidade de url's
+
+Após a criação destas listas de URL's o script **scriptExtractor.py** deve ser executado para iniciar a coleta dos dados.
 
 Na organização do projeto, o serviço *ExtractorService* realiza o papel de interface entre o usuário e o Scrapy.
 
@@ -31,28 +37,46 @@ O Scrapy é uma biblioteca que possui funcionalidades de um Web crawler.
 
 Web crawler é um programa que recolhe informações na internet de forma sistematizada através do protocolo padrão da web (http/https).
 
-## ExtractorService.buildData()
+## ExtractorService.extractData()
 
-O buildData() é necessário ser executado diversas vezes até que uma quantidade satisfatória de dados seja capturada.
+O extractData() é necessário ser executado diversas vezes até que uma quantidade satisfatória de dados seja capturada.
 
-Por conta disto, os dados capturados são salvos no formato JSON, no caminho registrado em **Base.CRAWLER_PATH**. Todos os arquivos JSON são lidos e preenchida uma lista de URLs vasculhadas.
+Por conta disto, os dados capturados são salvos no formato CSV, no caminho registrado em **Base.CRAWLER_PATH**. Todos os arquivos CSV são lidos e preenchida uma lista de URLs vasculhadas.
 
-Esta lista é comparada com as URLs disponíveis em **Base.URLS_DN** (**files/extractor/urls_dn.csv**), e será realizado a raspagem de dados apenas das URLs que ainda não foram capturadas. Neste processo é evitado o retrabalho.
+Esta lista é comparada com as URLs disponíveis em **Base.URLS_(DN/G1/OP)** (**files/extractor/urls_(dn/g1/op).csv**), e será realizado a raspagem de dados apenas das URLs que ainda não foram capturadas. Neste processo é evitado o retrabalho.
 
-Logo após, o crawler **DiarioDoNordesteSpider** é executado, onde vasculha cada uma das URLs disponíveis e captura os dados.
+Logo após, os Spiders são executados, onde vasculham cada uma das URLs disponíveis e captura os dados dos seus respectivos sites.
 
-Ao término da raspagem é executado a função **populateBase()** que coleta os arquivos JSON obtidos pelo crawler e recolhe o link e o corpo do texto em um arquivo CSV: **files/extractor/base_dn.csv**.
-    
-Também é realizada a limpeza da base removendo arquivos inválidos.
+Ao término da raspagem deve ser executado o **scriptBuildData.py** que  coleta os arquivos CSV obtidos pelos crawlers e recolhe as informações. Realiza a analise da SentiStrength para cada uma das entradas.
+
+Com o método **PySentiStrength.scoreClassifier()** classifica as notícias como imparciais se estiverem em equilibrio entre os pesos positivos e negativos obtidos pelo SentiStrength
+
+Gerando como resultado de três arquivos CSV:
+
+ - *Base.BASE*
+ - *Base.BASE_IMPARTIAL*
+ - *Base.BASE_PARTIAL*
+
+Também realiza a limpeza da base removendo arquivos vazios.
+
+Após a criação destes arquivos ocorre a partição da Base em treino e teste
+
+Gerando 2 arquivos:
+
+ - *Base.TRAINING*
+ - *Base.TEST*
 
 ## Rotulagem dos Dados
 
-Para uma classificação supervisionada é necessário que os dados estejam rotulados. E esta etapa do processo deve ser feita de maneira manual. Com a leitura das notícias contidas nos link's disponíveis e a categorização das mesmas.
+Para uma classificação supervisionada é necessário que os dados estejam rotulados.
 
-O resultado desta rotulagem manual deverá ser os arquivos:
+Neste ponto existirá os arquivos:
+
 - **files/classifier/base.csv** : Com a base completa armazenada
 - **files/classifier/base_training.csv** : Cerca de 30% da base rotulada total, utilizado para o treinamento do modelo
 - **files/classifier/base_test.csv** : Com os outros 70% da base rotulada, para a validação do modelo
+
+Estes dados rotulados serão utilizados para fazer com que o algoritmo aprenda os padrões para categoriza-los. Esta divisão da base em duas (treinamento e teste), acontece porque precisamos avaliar o algoritmo quanto à sua assertividade e uma das bases será utilizada para essa função.
 
 ## Preparação para o Modelo
 
@@ -62,16 +86,6 @@ Para utilizar o NLTK, utilize o comando prompt de comando:
 ```
 pip install nltk
 ```
-Antes da execução do algoritmo de mineração de texto precisa-se da criação de uma base de dados com todos os textos já rotulados que serão utilizados para fazer com que o algoritmo aprenda os padrões para categoriza-los.
-
-Essa base será dividida em duas variáveis, sendo elas: base de treinamento e base de teste. A divisão da base em duas, acontece porque precisamos avaliar o algoritmo quanto à sua assertividade e uma das bases será utilizada para essa função.
-
-No diretório **files/classifier** deverá ser inserido os arquivos CSV separados por ponto e vígula (;) visto que a vírgula, comumente usada nesses arquivos, pode ser utilizada dentro dos texto com mais frequência.
-
-Os arquivos serão:
-- *base.csv* : Com a base completa armazenada
-- *base_training.csv* : Cerca de 30% da base rotulada total, utilizado para o treinamento do modelo
-- *base_test.csv* : Com os outros 70% da base rotulada, para a validação do modelo
 
 O script **scriptClassifier.py** deve ser executado para iniciar o modelo.
 

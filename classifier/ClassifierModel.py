@@ -4,6 +4,7 @@ import pickle
 
 from nltk.classify.naivebayes import NaiveBayesClassifier
 
+
 class ClassifierModel():
     """
     Modelo de Classificador NaiveBayes
@@ -53,4 +54,4 @@ class ClassifierModel():
         f = open('classifier/export/impartiality_discovery_classifier.pickle', 'wb')
         pickle.dump(self.classifier, f)
         f.close()
-        
+    

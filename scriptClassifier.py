@@ -2,6 +2,13 @@
 
 from classifier.ClassifierService import ClassifierService
 
+
+"""
+Realiza o treinamento do modelo apartir dos dados de treinamento e de teste
+
+Salva este modelo com o Pickle
+"""
+
 print('Impartiality Discovery start...')
 classifierService = ClassifierService()
 
@@ -10,10 +17,3 @@ print( classifierService.accuracy() )
 
 print("Matriz de Confusão")
 print( classifierService.confusionMatrix() )
-
-text = 'Não gosto da noite!'
-print(text)
-print(classifierService.classifySentence(text))
-
-print('---------------------')
-classifierService.distributionProbSentence(text)

@@ -6,7 +6,12 @@ from nltk.metrics import ConfusionMatrix
 from files.base import Base, getBase
 from classifier.ClassifierController import ClassifierController
 
+
 class ClassifierService():
+    """
+    Serviço para gerenciar o Classificador
+    """
+    
     classifierController = ClassifierController()
 
     def __init__(self):
@@ -18,7 +23,7 @@ class ClassifierService():
         
         nltk.download('rslp')
 
-        if(not self.classifierController.notExistClassifier()):
+        if(self.classifierController.notExistClassifier()):
             self.classifierController.buildBase( getBase(Base.TRAINING) )
             self.classifierController.train()
 
@@ -106,3 +111,4 @@ class ClassifierService():
             print(tag , ": " ,dict[tag])
 
         return dict
+    
