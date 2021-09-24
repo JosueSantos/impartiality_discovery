@@ -4,7 +4,7 @@ from random import random
 from twisted.internet import defer, reactor
 from scrapy.crawler import CrawlerRunner
 
-from files.base import Base, getSizeDoc, getURLsForCrawler, getURLsWithContent, mergeFilesURL
+from files.base import Base, getSizeDoc, getURLsForCrawler, getURLsWithContent, mergeFilesURL, reduceFilesCrawler
 
 from extractor.scrapy.spider.OPUrlSpider import OPUrlSpider
 from extractor.scrapy.spider.G1UrlSpider import G1UrlSpider
@@ -71,7 +71,8 @@ class ExtractorService():
 
         size = getSizeDoc(Base.CRAWLER_PATH + filename)
         if(size):
-            print('\nFile created ' + Base.CRAWLER_PATH + filename)
+            print('\nCaptured new articles\n')
+            reduceFilesCrawler()
         else:
             print('\nNot found new articles')
             

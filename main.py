@@ -1,6 +1,5 @@
 # coding: utf-8
 
-
 from classifier.ClassifierService import ClassifierService
 
 

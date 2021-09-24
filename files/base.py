@@ -258,6 +258,9 @@ def cleanString(text: str) -> str:
         TAG_SCRIPT_RE = re.compile(r'<script(.+?)</script>')
         text = TAG_SCRIPT_RE.sub('', text)
 
+        TAG_COMMENT_RE = re.compile(r'<!--(.+?)-->')
+        text = TAG_COMMENT_RE.sub('', text)
+
         TAG_VIDEO_RE = re.compile(r'\[VIDEO(.+?)\]')
         text = TAG_VIDEO_RE.sub('', text)
 
@@ -265,9 +268,9 @@ def cleanString(text: str) -> str:
         text = TAG_RE.sub('', text)
         
         text = text.replace('TAGS','')
+        text = text.replace("  "," ")
         text = text.replace('""','"')
         text = text.replace(";",":")
-        text = text.replace("  "," ")
         text = text.replace("\n"," ")
         text = text.replace("\r"," ")
         text = text.replace("\t"," ")
@@ -403,4 +406,12 @@ def mergeFilesCrawler(temp: str, origin: str):
         print(str(count) + " lines in " + origin)
     
     os.remove(temp)
-    
+
+def reduceFilesCrawler():
+    filesCrawler = os.listdir(Base.CRAWLER_PATH)
+    for i in range(0, len(filesCrawler), 2):
+        if i+1 < len(filesCrawler):
+            fileCsvTemp = os.path.join(Base.CRAWLER_PATH, filesCrawler[i])
+            fileCsv = os.path.join(Base.CRAWLER_PATH, filesCrawler[i+1])
+            
+            mergeFilesCrawler(fileCsvTemp, fileCsv)

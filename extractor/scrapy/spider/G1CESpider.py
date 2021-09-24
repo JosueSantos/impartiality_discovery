@@ -76,6 +76,9 @@ class G1CESpider(scrapy.Spider):
             articleClean = articleClean.strip()
         
         if (articleClean):
+            articleClean = title + ' - ' + subtitle + ' - ' + articleClean
+            articleClean = cleanString(articleClean)
+
             yield ArticleItem(
                 link = link,
                 type = type,

@@ -18,8 +18,7 @@ class OPovoSpider(scrapy.Spider):
 
     def parse(self, response):
         link = response.url
-        if(response.css("body") != []):
-            print(link)
+        print(link)
         
         type = link.split('/')[3]
         type = cleanString(type)
@@ -78,6 +77,9 @@ class OPovoSpider(scrapy.Spider):
             articleClean = articleClean.strip()
 
         if (articleClean):
+            articleClean = title + ' - ' + subtitle + ' - ' + articleClean
+            articleClean = cleanString(articleClean)
+
             yield ArticleItem(
                 link = link,
                 type = type,
