@@ -10,7 +10,7 @@ Salva este modelo com o Pickle
 """
 
 print('Impartiality Discovery start...')
-classifierService = ClassifierService()
+classifierService = ClassifierService(ramaker= True)
 
 print("Acurácia do Modelo Gerado:")
 print( classifierService.accuracy() )

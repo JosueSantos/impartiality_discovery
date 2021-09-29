@@ -5,6 +5,9 @@
 - Python 3.8.5
 - Biblioteca Scrapy [ pip install scrapy ]
 - Biblioteca NLTK [ pip install nltk ]
+- Biblioteca Pandas [ pip install pandas ]
+- Biblioteca Matplotlib [ pip install matplotlib ]
+- Ferramenta Jupyter Notebook [ pip install jupyter ]
 
 ## Objetivo
 * Utilizar o processamento de linguagem natural para classificação automática de textos
@@ -16,6 +19,15 @@ A **Mineração de Textos** é uma das subáreas da Inteligência Artificial que
 A **classificação** é a tarefa de escolher o rótulo de classe correto para uma determinada entrada. Em tarefas básicas de classificação, cada entrada é considerada isoladamente de todas as outras entradas, e o conjunto de rótulos é definido com antecedência.
 
 Um classificador é denominado **supervisionado** se for construído com base em treinamento contendo o rótulo correto para cada entrada.
+
+## Estrutura e Organização
+
+Utilizando o conceito modular de organização, o projeto foi dividido em partes isoladas.
+
+- **classifier** é responsável pela criação do modelo e armazena toda a lógica necessária para o tal.
+- **extractor** é responsável pela captura dos dados, onde se realiza os crawlers.
+- **files** onde são armazenados os arquivos extraidos e possui um utilitário com diversas funções de acesso a estes arquivos.
+- **raiz** é o local dos scripts de acesso, para que com apenas uma execução toda a funcionalidade seja atendida.
 
 ## Coleta de Dados
 
@@ -51,11 +63,11 @@ Ao término da raspagem deve ser executado o **scriptBuildData.py** que  coleta 
 
 ### SentiStrength
 
-A ferramenta SentiStrength possui um dicionário léxico que atribui as palavras com emoções positivas valores entre 1 e 5 e a palavras com emoções negativas valores entre -5 e -1. Analisando a sentença que recebe, a divide em tokens e para cada palavra que transmite uma emoção é atribuída uma pontuação determinada. Após pontuar todas as palavras, a ferramenta retorna a pontuação máxima dos sentimentos negativos e a pontuação máxima dos sentimentos positivos.
+A ferramenta SentiStrength possui um dicionário léxico que atribui as palavras com emoções positivas valores entre 1 e 5 e a palavras com emoções negativas valores entre -1 e -5. Analisando a sentença que recebe, a divide em tokens e para cada palavra que transmite uma emoção é atribuída uma pontuação determinada. Após pontuar todas as palavras, a ferramenta retorna a pontuação máxima dos sentimentos negativos e a pontuação máxima dos sentimentos positivos.
 
 ### OpLexicon V3.0
 
-Foi realizado um acréscimo ao dicionário léxico da ferramenta SentiStrength, com a mesclagem de sua base com a do OpLexicon, também conhecido como Sentiment Lexicon, que consiste de uma lista de palavras rotuladas como positivas e negativas, incluindo gírias e abreviações no idioma Inglês. Este é um método léxico criado a partir de textos coletados em reviews de produtos em sites de compra.
+Foi realizado um acréscimo ao dicionário léxico da ferramenta SentiStrength, com a mesclagem de sua base com a do OpLexicon, também conhecido como Sentiment Lexicon, que consiste de uma lista de palavras rotuladas como positivas e negativas. Este é um método léxico criado a partir de textos coletados em reviews de produtos em sites de compra.
 
 ### PySentiStrength.scoreClassifier()
 

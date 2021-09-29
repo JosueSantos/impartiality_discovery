@@ -14,7 +14,7 @@ class ClassifierService():
     
     classifierController = ClassifierController()
 
-    def __init__(self):
+    def __init__(self, remaker = False):
         """
         Realiza o download ou update do pacote NLTK
 
@@ -23,12 +23,12 @@ class ClassifierService():
         
         nltk.download('rslp')
 
-        if(self.classifierController.notExistClassifier()):
+        if(self.classifierController.notExistClassifier() | remaker):
             self.classifierController.buildBase( getBase(Base.TRAINING) )
             self.classifierController.train()
 
             self.classifierController.classifierModel.saveModel()
-    
+
     def accuracy(self):
         """
         Calcula a precisão do modelo comparado com a base de teste
