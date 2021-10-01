@@ -59,7 +59,13 @@ Esta lista é comparada com as URLs disponíveis em **Base.URLS_(DN/G1/OP)** (**
 
 Logo após, os Spiders são executados, onde vasculham cada uma das URLs disponíveis e captura os dados dos seus respectivos sites.
 
-Ao término da raspagem deve ser executado o **scriptBuildData.py** que  coleta os arquivos CSV obtidos pelos crawlers e recolhe as informações. Realiza a analise da SentiStrength para cada uma das entradas.
+## Ground Truth
+
+Para a avaliação do modelo é necessário a comparação com uma base rotulada por um humano, para esta etapa do processo será criado um arquivo CSV manualmente na rota **files/ground_truth.csv** com a avaliação como "impartial/partial" seguido da url da noticia, este arquivo utilizará o delimitador de ponto e vírgula ";" utilizado nos outros arquivos do projeto.
+
+## ScriptBuildData
+
+Ao término da rotulagem manual deve ser executado o **scriptBuildData.py** que  coleta os arquivos CSV obtidos pelos crawlers e recolhe as informações e realiza a analise da SentiStrength para cada uma das entradas.
 
 ### SentiStrength
 
@@ -78,6 +84,7 @@ Gerando como resultado três arquivos CSV:
  - *Base.BASE*
  - *Base.BASE_IMPARTIAL*
  - *Base.BASE_PARTIAL*
+ - *Base.BASE_GROUND_TRUTH*
 
 Também realiza a limpeza da base removendo arquivos vazios.
 

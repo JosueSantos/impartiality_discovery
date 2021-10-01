@@ -29,7 +29,7 @@ class ClassifierService():
 
             self.classifierController.classifierModel.saveModel()
 
-    def accuracy(self):
+    def accuracy(self, groundTruth = False):
         """
         Calcula a precisão do modelo comparado com a base de teste
         
@@ -39,13 +39,16 @@ class ClassifierService():
         """
         
         classifierTest = ClassifierController()
-        classifierTest.buildBase( getBase(Base.TEST) )
+        if (groundTruth):
+            classifierTest.buildBase( getBase(Base.BASE_GROUND_TRUTH) )
+        else:
+            classifierTest.buildBase( getBase(Base.TEST) )
         
         accuracy = self.classifierController.accuracy(classifierTest.base)
         
         return(accuracy)
     
-    def confusionMatrix(self) -> ConfusionMatrix:
+    def confusionMatrix(self, groundTruth = False) -> ConfusionMatrix:
         """
         Calcula uma tabela que permite extrair métricas que auxiliam na avaliação de modelos
         
@@ -55,7 +58,10 @@ class ClassifierService():
         """
         
         classifierTest = ClassifierController()
-        classifierTest.buildBase( getBase(Base.TEST) )
+        if (groundTruth):
+            classifierTest.buildBase( getBase(Base.BASE_GROUND_TRUTH) )
+        else:
+            classifierTest.buildBase( getBase(Base.TEST) )
 
         expected = []
         predicted = []

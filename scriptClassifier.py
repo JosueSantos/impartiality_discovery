@@ -10,10 +10,6 @@ Salva este modelo com o Pickle
 """
 
 print('Impartiality Discovery start...')
-classifierService = ClassifierService(ramaker= True)
+classifierService = ClassifierService(remaker = True)
 
-print("Acurácia do Modelo Gerado:")
-print( classifierService.accuracy() )
-
-print("Matriz de Confusão")
-print( classifierService.confusionMatrix() )
+print('\n\nExecute Jupiter Notebook')

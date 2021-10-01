@@ -52,7 +52,7 @@ class PySentiStrength():
     
     def scoreClassifier(self, positive: int, negative: int) -> str:
         """
-        Realiza o calculo para definir o equilibrio
+        Para definir o equilibrio verifica se não há valores além do limite +2 | -2
     
         Args
         -----

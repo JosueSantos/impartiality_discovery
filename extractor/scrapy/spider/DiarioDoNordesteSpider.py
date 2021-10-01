@@ -52,7 +52,8 @@ class DiarioDoNordesteSpider(scrapy.Spider):
         article = response.css(
             ".m-l-article__content p, " +
             ".m-l-article__content h2, " +
-            ".m-l-article__content h1"
+            ".m-l-article__content h1, " + 
+            ".m-l-article__content blockquote div"
         ).extract()
         
         articleClean = ''

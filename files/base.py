@@ -17,6 +17,9 @@ class Base():
     BASE_IMPARTIAL = 'files/classifier/base_impartial.csv'
     BASE_PARTIAL = 'files/classifier/base_partial.csv'
 
+    BASE_GROUND_TRUTH = 'files/classifier/base_ground_truth.csv'
+    URL_GROUND_TRUTH = 'files/ground_truth.csv'
+
     TEST = 'files/classifier/base_test.csv'
     TRAINING = 'files/classifier/base_training.csv'
 
@@ -46,7 +49,7 @@ def getBase(name: str) -> list:
     reader = csv.reader(open(name, 'r', encoding='utf-8'), delimiter=';')
     dic = []
     for row in reader:
-        dic.append(tuple(row))
+        dic.append(tuple(row[0:2]))
     
     return dic
 
@@ -97,7 +100,11 @@ def populateBase():
     
     csvfilepartial = open(Base.BASE_PARTIAL, 'w', encoding='utf-8', newline='')
     partial = csv.writer(csvfilepartial, delimiter=';')
-    
+
+    groundTruth = list(zip(*getBase(Base.URL_GROUND_TRUTH)))
+    csvGroundTruth = open(Base.BASE_GROUND_TRUTH, 'w', encoding='utf-8', newline='')
+    baseGroundTruth = csv.writer(csvGroundTruth, delimiter=';')
+
     for filename in os.listdir(Base.CRAWLER_PATH):
         fileCsv = os.path.join(Base.CRAWLER_PATH, filename)
         if (os.stat(fileCsv).st_size):
@@ -116,10 +123,14 @@ def populateBase():
                         row[4],
                     ])
 
-                    if(score['balance'] == "impartial"):
-                        impartial.writerow([ row[0], score['balance'] ])
+                    if(row[3] in groundTruth[1]):
+                        key = groundTruth[1].index(row[3])
+                        baseGroundTruth.writerow([ row[0], groundTruth[0][key] ])
                     else:
-                        partial.writerow([ row[0], score['balance'] ])
+                        if(score['balance'] == "impartial"):
+                            impartial.writerow([ row[0], score['balance'] ])
+                        else:
+                            partial.writerow([ row[0], score['balance'] ])
 
         else:
             deleteFile.append(fileCsv)
