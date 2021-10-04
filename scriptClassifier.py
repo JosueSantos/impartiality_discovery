@@ -4,7 +4,7 @@ from classifier.ClassifierService import ClassifierService
 
 
 """
-Realiza o treinamento do modelo apartir dos dados de treinamento e de teste
+Realiza o treinamento do modelo apartir dos dados de Treinamento
 
 Salva este modelo com o Pickle
 """

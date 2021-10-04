@@ -33,7 +33,7 @@ class Base():
     URLS_G1_TEMP = 'files/extractor/g1Ceara/urls_g1_temp.csv'
     URLS_OP_TEMP = 'files/extractor/oPovo/urls_op_temp.csv'
 
-def getBase(name: str) -> list:
+def getBase(name: str, allFile = False) -> list:
     """
     Transformar os dados dos arquivos CSV em Listas para serem utilizadas no modelo
 
@@ -45,11 +45,17 @@ def getBase(name: str) -> list:
     -----
         dic: list [(text: string, tag: string)], Dados de Texto e suas Tag de categoria
     """
+
+    if (allFile):
+        keyEnd = 5
     
     reader = csv.reader(open(name, 'r', encoding='utf-8'), delimiter=';')
     dic = []
     for row in reader:
-        dic.append(tuple(row[0:2]))
+        if (allFile):
+            dic.append(tuple(row[0:]))
+        else:
+            dic.append(tuple(row[0:2]))
     
     return dic
 
@@ -73,7 +79,7 @@ def getSizeDoc(name: str) -> int:
         os.remove(name)
         return 0
 
-def populateBase():
+def populateBase(update = True):
     """
     Coleta os arquivos CSV obtidos pelo crawler e recolhe as informações
 
@@ -92,17 +98,31 @@ def populateBase():
     deleteFile = []
     pySentiStrength = PySentiStrength()
 
-    csvfile = open(Base.BASE, 'w', encoding='utf-8', newline='')
+    base = []
+    id_key = 0
+    type_file = 'w'
+    if (update):
+        try:
+            base = list(zip(*getBase(Base.BASE, allFile = True)))
+            id_key = int(base[7][-1])
+            type_file = 'a+'
+            
+            print("Updating Base...")
+            print(id_key)
+        except:
+            print("Creating new base...")
+
+    csvfile = open(Base.BASE, type_file, encoding='utf-8', newline='')
     spamwriter = csv.writer(csvfile, delimiter=';')
     
-    csvfileimpartial = open(Base.BASE_IMPARTIAL, 'w', encoding='utf-8', newline='')
+    csvfileimpartial = open(Base.BASE_IMPARTIAL, type_file, encoding='utf-8', newline='')
     impartial = csv.writer(csvfileimpartial, delimiter=';')
     
-    csvfilepartial = open(Base.BASE_PARTIAL, 'w', encoding='utf-8', newline='')
+    csvfilepartial = open(Base.BASE_PARTIAL, type_file, encoding='utf-8', newline='')
     partial = csv.writer(csvfilepartial, delimiter=';')
 
     groundTruth = list(zip(*getBase(Base.URL_GROUND_TRUTH)))
-    csvGroundTruth = open(Base.BASE_GROUND_TRUTH, 'w', encoding='utf-8', newline='')
+    csvGroundTruth = open(Base.BASE_GROUND_TRUTH, type_file, encoding='utf-8', newline='')
     baseGroundTruth = csv.writer(csvGroundTruth, delimiter=';')
 
     for filename in os.listdir(Base.CRAWLER_PATH):
@@ -111,26 +131,29 @@ def populateBase():
             readerCrawler = csv.reader(open(fileCsv, 'r', encoding='utf-8'), delimiter=';')
             for row in readerCrawler:
                 if (row[0] and row[0] != 'article'):
-                    score = pySentiStrength.getScore(row[0])
+                    if(not base or row[3] not in base[5]):
+                        id_key += 1
+                        score = pySentiStrength.getScore(row[0])
                     
-                    spamwriter.writerow([
-                        row[0],
-                        score['balance'],
-                        score['positive'],
-                        score['negative'],
-                        score['neutral'],
-                        row[3],
-                        row[4],
-                    ])
+                        spamwriter.writerow([
+                            row[0],
+                            score['balance'],
+                            score['positive'],
+                            score['negative'],
+                            score['neutral'],
+                            row[3],
+                            row[4],
+                            id_key,
+                        ])
 
-                    if(row[3] in groundTruth[1]):
-                        key = groundTruth[1].index(row[3])
-                        baseGroundTruth.writerow([ row[0], groundTruth[0][key] ])
-                    else:
-                        if(score['balance'] == "impartial"):
-                            impartial.writerow([ row[0], score['balance'] ])
+                        if(row[3] in groundTruth[1]):
+                            key = groundTruth[1].index(row[3])
+                            baseGroundTruth.writerow([ row[0], groundTruth[0][key], id_key ])
                         else:
-                            partial.writerow([ row[0], score['balance'] ])
+                            if(score['balance'] == "impartial"):
+                                impartial.writerow([ row[0], score['balance'], id_key ])
+                            else:
+                                partial.writerow([ row[0], score['balance'], id_key ])
 
         else:
             deleteFile.append(fileCsv)

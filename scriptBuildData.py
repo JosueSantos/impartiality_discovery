@@ -8,20 +8,21 @@ Coleta os arquivos CSV obtidos pelo crawler e recolhe as informações
 
 Realiza a analise da SentiStrength para cada uma das entradas.
 
-Com o método PySentiStrength.scoreClassifier() classifica as notícias como imparciais se estiverem em equilibrio entre os pesos positivos e negativos obtidos pelo SentiStrength
+Com o método PySentiStrength.scoreClassifier() classifica as notícias como imparciais baseada nos pesos positivos e negativos obtidos pelo SentiStrength
 
-Gera 3 arquivos CSV:
+Gera 4 arquivos CSV:
  - Base.BASE
  - Base.BASE_IMPARTIAL
  - Base.BASE_PARTIAL
+ - Base.BASE_GROUND_TRUTH
 
 Também realiza a limpeza da base removendo arquivos vazios
 """
 
-populateBase()
+populateBase(update = True)
 
 """
-Realiza a partição da Base em treino e teste
+Realiza a partição da Base em Treino e Teste
 
 Gerando 2 arquivos:
  - Base.TRAINING

@@ -32618,3 +32618,15 @@ zupar	-1
 zurzir	-1
 falso	-2
 verdadeiro	2
+conforme	0
+segundo	0
+disse	0
+declarou	0
+de acordo	0
+diz	0
+afirma	0
+argumenta	0
+enumera	0
+explica	0
+apontou	0
+na visão	0
