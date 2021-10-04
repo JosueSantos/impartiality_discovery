@@ -79,7 +79,7 @@ Foi realizado um acréscimo ao dicionário léxico da ferramenta SentiStrength, 
 
 Com o método **PySentiStrength.scoreClassifier()** classifica as notícias como imparciais se estiverem próximas a neutralidade (+2 | -2) entre os pesos positivos e negativos obtidos pelo SentiStrength, levando em consideração que o limite dos valores das emoções é +5 e -5.
 
-Gerando como resultado três arquivos CSV:
+Gerando como resultado quatro arquivos CSV:
 
  - *Base.BASE*
  - *Base.BASE_IMPARTIAL*
@@ -102,6 +102,7 @@ Para uma classificação supervisionada é necessário que os dados estejam rotu
 Neste ponto existirá os arquivos:
 
 - **files/classifier/base.csv** : Com a base completa armazenada
+- **files/classifier/base_ground_truth.csv** : Com a base rotulada por humanos, para a validação do modelo
 - **files/classifier/base_training.csv** : Cerca de 30% da base rotulada total, utilizado para o treinamento do modelo
 - **files/classifier/base_test.csv** : Com os outros 70% da base rotulada, para a validação do modelo
 

@@ -40,14 +40,12 @@ def getBase(name: str, allFile = False) -> list:
     Args
     -----
         name: string, Nome de uma das bases de dados BASE, TEST ou TRAINING
+        allFile [opcional]: boolean, True para retornar todas as colunas, False para retornar apenas as duas primeiras colunas em formato de tupla
         
     Returns
     -----
-        dic: list [(text: string, tag: string)], Dados de Texto e suas Tag de categoria
+        dic: list [(string, string)], Dados de Texto e suas Tag de categoria
     """
-
-    if (allFile):
-        keyEnd = 5
     
     reader = csv.reader(open(name, 'r', encoding='utf-8'), delimiter=';')
     dic = []
@@ -85,14 +83,19 @@ def populateBase(update = True):
 
     Realiza a analise da SentiStrength para cada uma das entradas.
 
-    Com o método PySentiStrength.scoreClassifier() classifica as notícias como imparciais se estiverem em equilibrio entre os pesos positivos e negativos obtidos pelo SentiStrength
+    Com o método PySentiStrength.scoreClassifier() classifica as notícias como imparciais de acordo com os pesos positivos e negativos obtidos pelo SentiStrength
 
-    Gera 3 arquivos CSV:
+    Gera 4 arquivos CSV:
     - Base.BASE
     - Base.BASE_IMPARTIAL
     - Base.BASE_PARTIAL
+    - Base.BASE_GROUND_TRUTH
 
     Também realiza a limpeza da base removendo arquivos vazios
+    
+    Args
+    -----
+        update [opcional]: boolean, True para adicionar novas informações mantendo as anteriores, False para apagar as informações anteriores e carregar novas
     """
 
     deleteFile = []
@@ -167,7 +170,7 @@ def populateBase(update = True):
 
 def toSliceBase(trainingPercentage: int):
     """
-    Realiza a partição da Base em treino e teste
+    Realiza a partição da Base em Treino e Teste
 
     Gerando 2 arquivos:
     - Base.TRAINING
@@ -303,7 +306,8 @@ def cleanString(text: str) -> str:
         
         text = text.replace('TAGS','')
         text = text.replace("  "," ")
-        text = text.replace('""','"')
+        text = text.replace('""','')
+        text = text.replace("''","")
         text = text.replace(";",":")
         text = text.replace("\n"," ")
         text = text.replace("\r"," ")
