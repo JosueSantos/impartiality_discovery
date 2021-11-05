@@ -1,2 +1,7 @@
 __pycache__
 /.ipynb_checkpoints
+.vs
+/files/extractor/g1Ceara/urls_g1_geral.csv
+/files/classifier/base_impartial.csv
+/files/classifier/base_partial.csv
+/files/classifier/base_test.csv

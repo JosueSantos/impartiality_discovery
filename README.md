@@ -6,7 +6,6 @@
 - Biblioteca Scrapy [ pip install scrapy ]
 - Biblioteca NLTK [ pip install nltk ]
 - Biblioteca Pandas [ pip install pandas ]
-- Biblioteca Matplotlib [ pip install matplotlib ]
 - Ferramenta Jupyter Notebook [ pip install jupyter ]
 
 ## Objetivo

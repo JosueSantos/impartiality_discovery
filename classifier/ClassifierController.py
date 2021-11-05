@@ -101,7 +101,8 @@ class ClassifierController():
         for (words) in text.split():
             words = re.sub(r'[^\w\s$]|http\S+','', words).lower()
             withStem = [ p for p in words.split() if p not in self.stopWords ]
-            phrasesClean.append(str(self.stemmer.stem(withStem[0])))
+            if(withStem):
+                phrasesClean.append(str(self.stemmer.stem(withStem[0])))
         
         return phrasesClean
 

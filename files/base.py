@@ -8,6 +8,7 @@ import random
 from classifier.PySentiStrength import PySentiStrength
 
 
+
 class Base():
     """
     Mapeamento dos arquivos CSV
@@ -22,6 +23,8 @@ class Base():
 
     TEST = 'files/classifier/base_test.csv'
     TRAINING = 'files/classifier/base_training.csv'
+
+    TRAINING_NAIVE_BAYES = 'files/classifier/base_training_naive_bayes.csv'
 
     CRAWLER_PATH = 'files/extractor/crawler'
 
@@ -147,11 +150,19 @@ def populateBase(update = True):
                             row[3],
                             row[4],
                             id_key,
+                            score['length'],
+                            score['count_neutral_words'],
                         ])
 
                         if(row[3] in groundTruth[1]):
                             key = groundTruth[1].index(row[3])
-                            baseGroundTruth.writerow([ row[0], groundTruth[0][key], id_key ])
+                            baseGroundTruth.writerow([
+                                row[0],
+                                groundTruth[0][key],
+                                id_key,
+                                score['length'],
+                                score['count_neutral_words'],
+                            ])
                         else:
                             if(score['balance'] == "impartial"):
                                 impartial.writerow([ row[0], score['balance'], id_key ])
@@ -193,8 +204,14 @@ def toSliceBase(trainingPercentage: int):
     impartialSize = len(listImpartial)
     partialSize = len(listPartial)
 
-    trainingImpartial = int(impartialSize * (trainingPercentage/100))
-    trainingPartial = int(partialSize * (trainingPercentage/100))
+    if(partialSize < impartialSize):
+        sizeTraining = partialSize
+    else:
+        sizeTraining = impartialSize
+
+
+    trainingImpartial = int(sizeTraining * (trainingPercentage/100))
+    trainingPartial = int(sizeTraining * (trainingPercentage/100))
 
     random.shuffle(listImpartial)
     random.shuffle(listPartial)
@@ -453,3 +470,18 @@ def reduceFilesCrawler():
             fileCsv = os.path.join(Base.CRAWLER_PATH, filesCrawler[i+1])
             
             mergeFilesCrawler(fileCsvTemp, fileCsv)
+
+def populateNaiveBayes(classifierService):
+    csvNaiveBayes = open(Base.TRAINING_NAIVE_BAYES, 'w', encoding='utf-8', newline='')
+    baseNaiveBayes = csv.writer(csvNaiveBayes, delimiter=';')
+    
+    readerCrawler = csv.reader(open(Base.TRAINING, 'r', encoding='utf-8'), delimiter=';')
+    for row in readerCrawler:
+        type = classifierService.classifySentence(row[0])
+        print(type)
+        print(len(row[0]))
+        baseNaiveBayes.writerow([ row[0], type ])
+        
+    csvNaiveBayes.close()
+        
+    

@@ -118,3 +118,6 @@ class ClassifierService():
 
         return dict
     
+    def getUnique(self, base):
+        baseCleaning = self.classifierController.baseCleaning(getBase(base))
+        return self.classifierController.findUniqueWords(baseCleaning)

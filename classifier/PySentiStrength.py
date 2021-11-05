@@ -1,5 +1,9 @@
 # coding: utf-8
 
+import nltk
+from nltk import sent_tokenize
+from nltk import word_tokenize
+
 from sentistrength import PySentiStr
 
 
@@ -17,6 +21,8 @@ class PySentiStrength():
         
         self.pySentiStr.setSentiStrengthPath('files/sentiStrength/SentiStrength.jar')
         self.pySentiStr.setSentiStrengthLanguageFolderPath('files/sentiStrength/SentStrength_Data/')
+
+        nltk.download('punkt')
     
     def getScore(self, doc: str) -> dict:
         """
@@ -39,18 +45,52 @@ class PySentiStrength():
         
         result = self.pySentiStr.getSentiment(doc, score='trinary')
         positive, negative, neutral = list(result[0])
-        balance = self.scoreClassifier(positive, negative)
+
+        sents = sent_tokenize(doc)
+        length = len(sents)
+        words = word_tokenize(doc)
+        word_neutral = [
+            "conforme",
+            "segundo",
+            "disse",
+            "declarou",
+            "diz",
+            "afirma",
+            "argumenta",
+            "enumera",
+            "explica",
+            "apontou",
+            "relatou",
+            "ressaltou",
+            "afirmou",
+            "aponta",
+            "informou",
+            "ressalta",
+            "escreveu",
+            "ibope",
+            "anunciou",
+            "destacou",
+            "ressalta",
+            "frisou",
+            "mencionou"
+        ]
+        words = list(filter(lambda word: word.lower() in word_neutral, words))
+        count_neutral_words = len(words)
+
+        balance = self.scoreClassifier(positive, negative, length, count_neutral_words)
         
-        print(balance + ' - positive: ' + str(positive) + ' negative: '+ str(negative)+' neutral: '+str(neutral))
+        print(balance + ' - length: ' + str(length) + ' count_neutral_words: '+ str(count_neutral_words))
         
         return {
             'positive': positive,
             'negative': negative,
             'neutral': neutral,
             'balance': balance,
+            'length': length,
+            'count_neutral_words': count_neutral_words,
         }
     
-    def scoreClassifier(self, positive: int, negative: int) -> str:
+    def scoreClassifier(self, positive: int, negative: int, length: int, count_neutral_words: int) -> str:
         """
         Para definir o equilibrio verifica se não há valores além do limite +2 | -2
     
@@ -64,7 +104,10 @@ class PySentiStrength():
             str, Resultado do balanço: impartial / partial
         """
 
-        if (positive < 3 and negative > -3):
+        porcNeutral = count_neutral_words / length
+        if (porcNeutral > 0.6):
+            return "impartial"
+        elif (positive < 3 and negative > -3):
             return "impartial"
         else:
             return "partial"
