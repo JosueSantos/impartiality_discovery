@@ -28,6 +28,14 @@ Utilizando o conceito modular de organização, o projeto foi dividido em partes
 - **files** onde são armazenados os arquivos extraidos e possui um utilitário com diversas funções de acesso a estes arquivos.
 - **raiz** é o local dos scripts de acesso, para que com apenas uma execução toda a funcionalidade seja atendida.
 
+## Ordem da Execução dos scripts
+
+- scriptUpdateURLs.py
+- scriptExtractor.py
+- scriptBuildData.py
+- scriptClassifier.py
+- scriptPopulateNaiveBayes.py
+
 ## Coleta de Dados
 
 Executando o **scriptUpdateURLs.py**, ele irá executar os cralwers necessários para a captura das url's das notícias dos sites Diário do Nordeste, G1 e O Povo, removendo as url's duplicadas e salvando o progresso nos arquivos CSV no caminho:
@@ -76,7 +84,11 @@ Foi realizado um acréscimo ao dicionário léxico da ferramenta SentiStrength, 
 
 ### PySentiStrength.scoreClassifier()
 
-Com o método **PySentiStrength.scoreClassifier()** classifica as notícias como imparciais se estiverem próximas a neutralidade (+2 | -2) entre os pesos positivos e negativos obtidos pelo SentiStrength, levando em consideração que o limite dos valores das emoções é +5 e -5.
+Analisando as notícias rotuladas como imparcial foi percebido o padrão da quantidade de palavras de citação em relação a quantidade de frases da notícia. Sendo que, se houvesse uma citação em pelo menos 60% das frases da noticia, esta teria maior chance de ser considerada imparcial.
+
+Com base nessa analise foi criado o método **PySentiStrength.scoreClassifier()** que classifica as notícias como imparciais se possuirem uma grande quantidade de palavras de citações ou estiverem próximas a neutralidade (+2 | -2) entre os pesos positivos e negativos obtidos pelo SentiStrength, levando em consideração que o limite dos valores das emoções é +5 e -5.
+
+É executado a avaliação deste metodo para cada uma das noticias capturadas.
 
 Gerando como resultado quatro arquivos CSV:
 
@@ -100,10 +112,10 @@ Para uma classificação supervisionada é necessário que os dados estejam rotu
 
 Neste ponto existirá os arquivos:
 
-- **files/classifier/base.csv** : Com a base completa armazenada
-- **files/classifier/base_ground_truth.csv** : Com a base rotulada por humanos, para a validação do modelo
-- **files/classifier/base_training.csv** : Cerca de 30% da base rotulada total, utilizado para o treinamento do modelo
-- **files/classifier/base_test.csv** : Com os outros 70% da base rotulada, para a validação do modelo
+- **files/classifier/base.csv** : Com a base completa armazenada.
+- **files/classifier/base_ground_truth.csv** : Com a base rotulada por humanos, para a validação do modelo.
+- **files/classifier/base_training.csv** : Pode ser enviado por parametro a porcentagem que será entregue a base de treino, como utilizaremos os dados da base ground truth como teste esta base deve estar proximo de 100% da base total.
+- **files/classifier/base_test.csv** : Recebera a sobra da porcentagem da base de treinamento, como a base ground truth será usada para o teste, esta deverá estar vazia.
 
 Estes dados rotulados serão utilizados para fazer com que o algoritmo aprenda os padrões para categoriza-los. Esta divisão da base em duas (treinamento e teste), acontece porque precisamos avaliar o algoritmo quanto à sua assertividade e uma das bases será utilizada para essa função.
 
@@ -230,3 +242,7 @@ Para uma visualização mais detalhada da distribuição das porcentagens do mod
 text = 'Texto há ser analisado...'
 classifierService.distributionProbSentence(text)
 ```
+
+## Após a geração do Modelo
+
+Após a geração do Modelo baseado no Naive Bayes, execute o scriptPopulateNaiveBayes. Que irá avaliar novamente toda a base e criar um novo arquivo de teste. Este arquivo será utilizado em outra aplicação para aprimorar ainda mais a acuracia do modelo utilizando tecnicas de word embedding.

@@ -204,14 +204,14 @@ def toSliceBase(trainingPercentage: int):
     impartialSize = len(listImpartial)
     partialSize = len(listPartial)
 
-    if(partialSize < impartialSize):
-        sizeTraining = partialSize
-    else:
-        sizeTraining = impartialSize
+    # if(partialSize < impartialSize):
+    #     sizeTraining = partialSize
+    # else:
+    #     sizeTraining = impartialSize
 
 
-    trainingImpartial = int(sizeTraining * (trainingPercentage/100))
-    trainingPartial = int(sizeTraining * (trainingPercentage/100))
+    trainingImpartial = int(impartialSize * (trainingPercentage/100))
+    trainingPartial = int(partialSize * (trainingPercentage/100))
 
     random.shuffle(listImpartial)
     random.shuffle(listPartial)
