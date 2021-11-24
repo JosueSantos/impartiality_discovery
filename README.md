@@ -68,9 +68,11 @@ Logo após, os Spiders são executados, onde vasculham cada uma das URLs dispon�
 
 ## Ground Truth
 
-Para a avaliação do modelo é necessário a comparação com uma base rotulada por um humano, para esta etapa do processo será criado um arquivo CSV manualmente na rota **files/ground_truth.csv** com a avaliação como "impartial/partial" seguido da url da noticia, este arquivo utilizará o delimitador de ponto e vírgula ";" utilizado nos outros arquivos do projeto.
+Para a avaliação do modelo é necessário a comparação com uma base rotulada por um humano, para esta etapa do processo será criado um arquivo CSV manualmente na rota **files/ground_truth.csv** com a avaliação como "impartial/partial" seguido da url da notícia, este arquivo utilizará o delimitador de ponto e vírgula ";" utilizado nos outros arquivos do projeto. Observando que as notícias contidas na ground_truth deve ter sido capturada pelos crawlers para se possuir o conteúdo da notícia para a analise.
 
 ## ScriptBuildData
+
+Para o aprendizado de máquina é necessário uma grande quantidade de dados, visto que a rotulagem manual não é o suficiente para o treinamento e para o teste. Será utilizada apenas para o teste, enquanto para o treinamento será utilizada uma base rotulada automaticamente utilizando-se de algumas ferramentas.
 
 Ao término da rotulagem manual deve ser executado o **scriptBuildData.py** que  coleta os arquivos CSV obtidos pelos crawlers e recolhe as informações e realiza a analise da SentiStrength para cada uma das entradas.
 
@@ -245,4 +247,8 @@ classifierService.distributionProbSentence(text)
 
 ## Após a geração do Modelo
 
-Após a geração do Modelo baseado no Naive Bayes, execute o scriptPopulateNaiveBayes. Que irá avaliar novamente toda a base e criar um novo arquivo de teste. Este arquivo será utilizado em outra aplicação para aprimorar ainda mais a acuracia do modelo utilizando tecnicas de word embedding.
+Para observar a analise destas bases e da acuracia do modelo Naive Bayes veja o arquivo **analytics.ipynb**..
+
+Após a geração do Modelo baseado no Naive Bayes, execute o scriptPopulateNaiveBayes. Que irá avaliar novamente toda a base e criar um novo arquivo de teste. Este arquivo será utilizado em outra aplicação para aprimorar ainda mais a acurácia do modelo utilizando tecnicas de word embedding.
+
+Pode-se observar os resultados no arquivo **ImpartialityDiscovery.ipynb**
