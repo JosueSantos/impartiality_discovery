@@ -463,6 +463,11 @@ def mergeFilesCrawler(temp: str, origin: str):
     os.remove(temp)
 
 def reduceFilesCrawler():
+    """
+    Realiza uma varredura no caminho CRAWLER_PATH
+    Capturando de dois em dois o caminho dos arquivos e chamando a função MergeFilesCrawler
+    """
+    
     filesCrawler = os.listdir(Base.CRAWLER_PATH)
     for i in range(0, len(filesCrawler), 2):
         if i+1 < len(filesCrawler):
@@ -472,6 +477,12 @@ def reduceFilesCrawler():
             mergeFilesCrawler(fileCsvTemp, fileCsv)
 
 def populateNaiveBayes(classifierService):
+    """
+    Realiza a analise do modelo Naive Bayes para cada uma das Notícias da base.
+
+    Gera um arquivo CSV:
+    - Base.TRAINING_NAIVE_BAYES
+    """
     csvNaiveBayes = open(Base.TRAINING_NAIVE_BAYES, 'w', encoding='utf-8', newline='')
     baseNaiveBayes = csv.writer(csvNaiveBayes, delimiter=';')
     

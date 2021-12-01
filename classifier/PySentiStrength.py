@@ -40,6 +40,8 @@ class PySentiStrength():
                 'negative': int,
                 'neutral': int,
                 'balance': str,
+                'length': int,
+                'count_neutral_words': int,
             }
         """
         

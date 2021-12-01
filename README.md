@@ -9,9 +9,9 @@
 - Ferramenta Jupyter Notebook [ pip install jupyter ]
 
 ## Objetivo
-* Utilizar o processamento de linguagem natural para classificação automática de textos
+* Utilizar o processamento de linguagem natural para classificação automática de textos;
 
-  * Mineração de Textos utilizando a Classificação Supervisionada
+  * Mineração de Textos utilizando a Classificação Supervisionada;
 
 A **Mineração de Textos** é uma das subáreas da Inteligência Artificial que tem como uma de suas metas básicas a localização de padrões em textos. Padrões utilizados para uma classificação em rótulos.
 
@@ -24,9 +24,9 @@ Um classificador é denominado **supervisionado** se for construído com base em
 Utilizando o conceito modular de organização, o projeto foi dividido em partes isoladas.
 
 - **classifier** é responsável pela criação do modelo e armazena toda a lógica necessária para o tal.
-- **extractor** é responsável pela captura dos dados, onde se realiza os crawlers.
-- **files** onde são armazenados os arquivos extraidos e possui um utilitário com diversas funções de acesso a estes arquivos.
-- **raiz** é o local dos scripts de acesso, para que com apenas uma execução toda a funcionalidade seja atendida.
+- **extractor** é responsável pela captura dos dados, onde se realiza os crawlers;
+- **files** onde são armazenados os arquivos extraidos e possui um utilitário com diversas funções de acesso a estes arquivos;
+- **raiz** é o local dos scripts de acesso, para que com apenas uma execução toda a funcionalidade seja atendida;
 
 ## Ordem da Execução dos scripts
 
@@ -44,7 +44,7 @@ Executando o **scriptUpdateURLs.py**, ele irá executar os cralwers necessários
  - **files/extractor/g1Ceara/urls_g1.csv**
  - **files/extractor/oPovo/urls_op.csv**
 
-Esta etapa deve se repetir diariamente até ser capturada uma grande quantidade de url's
+Esta etapa deve se repetir diariamente até ser capturada uma grande quantidade de url's.
 
 Após a criação destas listas de URL's o script **scriptExtractor.py** deve ser executado para iniciar a coleta dos dados.
 
@@ -70,9 +70,19 @@ Logo após, os Spiders são executados, onde vasculham cada uma das URLs dispon�
 
 Para a avaliação do modelo é necessário a comparação com uma base rotulada por um humano, para esta etapa do processo será criado um arquivo CSV manualmente na rota **files/ground_truth.csv** com a avaliação como "impartial/partial" seguido da url da notícia, este arquivo utilizará o delimitador de ponto e vírgula ";" utilizado nos outros arquivos do projeto. Observando que as notícias contidas na ground_truth deve ter sido capturada pelos crawlers para se possuir o conteúdo da notícia para a analise.
 
+Esta analise manual obedece alguns critérios para a classificar como imparcial ou parcial:
+
+Para ser considerada Parcial a notícia deve:
+- Deduzir algo com a utilização dos termos: "deve ser", "poderá";
+- Demostrar a emoção do jornalista;
+- Exibir a opnião, trazendo algo além dos fatos;
+- Ausência de relatos das partes envolvidas;
+
+Será considerada Imparcial a notícia que não se enquadrar nos critérios de parcialidade.
+
 ## ScriptBuildData
 
-Para o aprendizado de máquina é necessário uma grande quantidade de dados, visto que a rotulagem manual não é o suficiente para o treinamento e para o teste. Será utilizada apenas para o teste, enquanto para o treinamento será utilizada uma base rotulada automaticamente utilizando-se de algumas ferramentas.
+Para o aprendizado de máquina é necessário uma grande quantidade de dados, visto que a rotulagem manual não é o suficiente para o treinamento e para o teste. A base Ground Truth será utilizada apenas para o teste, enquanto para o treinamento será utilizada uma base rotulada automaticamente a partir de algumas ferramentas.
 
 Ao término da rotulagem manual deve ser executado o **scriptBuildData.py** que  coleta os arquivos CSV obtidos pelos crawlers e recolhe as informações e realiza a analise da SentiStrength para cada uma das entradas.
 
@@ -86,11 +96,47 @@ Foi realizado um acréscimo ao dicionário léxico da ferramenta SentiStrength, 
 
 ### PySentiStrength.scoreClassifier()
 
-Analisando as notícias rotuladas como imparcial foi percebido o padrão da quantidade de palavras de citação em relação a quantidade de frases da notícia. Sendo que, se houvesse uma citação em pelo menos 60% das frases da noticia, esta teria maior chance de ser considerada imparcial.
+Analisando as notícias rotuladas como imparcial foi percebido um padrão com a quantidade de palavras de citação em relação a quantidade de frases da notícia. Sendo que, se houvesse uma citação em pelo menos 60% das frases da noticia, esta teria maior chance de ser considerada imparcial.
+
+As palavras de citação mapeadas foram:
+- conforme
+- segundo
+- disse
+- declarou
+- acordo
+- diz
+- afirma
+- argumenta
+- enumera
+- explica
+- apontou
+- pesquisa
+- relatou
+- relatório
+- afirmou
+- aponta
+- informou
+- ressaltou
+- escreveu
+- ibope
+- tse
+- eleitoral
+- agenda
+- anunciou
+- destacou
+- ressalta
+- frisou
+- mencionou
+- comenta
+- informaram
+- decidiu
+- agenda
+- determinou
+- concluiu
 
 Com base nessa analise foi criado o método **PySentiStrength.scoreClassifier()** que classifica as notícias como imparciais se possuirem uma grande quantidade de palavras de citações ou estiverem próximas a neutralidade (+2 | -2) entre os pesos positivos e negativos obtidos pelo SentiStrength, levando em consideração que o limite dos valores das emoções é +5 e -5.
 
-É executado a avaliação deste metodo para cada uma das noticias capturadas.
+É executado a avaliação deste metodo para cada uma das notícias capturadas.
 
 Gerando como resultado quatro arquivos CSV:
 
@@ -204,30 +250,10 @@ classifierControllerTest = ClassifierController()
 classifierControllerTest.buildBase( getBase(Base.TEST) )
 
 accuracy = classifierController.accuracy(classifierControllerTest.base)
-print("Acurácia do Modelo Gerado:")
-print(accuracy)
 ```
 Após o treinamento da base, o modelo pode ser medido sua Acurácia.
 
 *O método **getBase** transformar os dados dos arquivos CSV em Listas para serem utilizadas do modelo.
-
-## Matriz de Confusão
-Com o modelo criado, pode ser gerado a matriz de confusão que é uma forma intuitiva de saber como o classificador está se comportando, ja que só a acurácia não é suficiente para determinar a precisão de uma algoritmo.
-
-``` python
-expected = []
-predicted = []
-
-for (phrase, tag) in classifierControllerTest.base:
-    resultado = classifierController.classifierModel.classifier.classify(phrase)
-
-    predicted.append(resultado)
-    expected.append(tag)
-
-matriz = ConfusionMatrix(expected, predicted)
-print("Matriz de Confusão")
-print(matriz)
-```
 
 ## Utilizando o modelo
 Para utilizar a categorização do modelo em um texto único:
@@ -247,8 +273,18 @@ classifierService.distributionProbSentence(text)
 
 ## Após a geração do Modelo
 
-Para observar a analise destas bases e da acuracia do modelo Naive Bayes veja o arquivo **analytics.ipynb**..
+Para observar a analise destas bases e da acurácia do modelo Naive Bayes veja o notebook **analytics.ipynb**..
 
-Após a geração do Modelo baseado no Naive Bayes, execute o scriptPopulateNaiveBayes. Que irá avaliar novamente toda a base e criar um novo arquivo de teste. Este arquivo será utilizado em outra aplicação para aprimorar ainda mais a acurácia do modelo utilizando tecnicas de word embedding.
+Após a geração do Modelo baseado no Naive Bayes, execute o **scriptPopulateNaiveBayes**. Que irá avaliar novamente toda a base e criar um novo arquivo de teste. Este arquivo será utilizado em outra aplicação para aprimorar ainda mais a acurácia do modelo utilizando tecnicas de word embedding.
 
-Pode-se observar os resultados no arquivo **ImpartialityDiscovery.ipynb**
+O sentido deste processo consiste em sempre melhorar a base de dados rotulada automaticamente, para que o próximo modelo gerado tenha uma acurácia ainda melhor.
+
+A base rotulada pela ferramenta SentiStrength obteve uma acurácia de 56%, quando comparada com a base rotulada por humanos (base ground truth).
+
+Já o modelo criado pelo NaiveBayes obteve uma acurácia de 77%, porém observando os rotulos separadamente, percebemos que a acertividade para nóticias imparciais foi de 93% quanto para nóticias parciais foi de apenas 23%. Necessitando de uma nova etapa na busca pelo modelo ideal.
+
+Pode-se observar o processo utilizando as tecnicas de word embedding no notebook **ImpartialityDiscovery.ipynb**
+
+Com o Word Embedding foi possível ter uma melhora no modelo. Apesar da acurácia total ter caído para 74%, a acertividade de notícias imparciais foi para 75% e a das parciais subiu para 68%. Tornando assim um modelo muito mais confiável do que os anteriores.
+
+
