@@ -15,6 +15,8 @@ class Base():
     """
     
     BASE = 'files/classifier/base.csv'
+    BASE_ANALYTICS = 'files/classifier/base_analytics.csv'
+
     BASE_IMPARTIAL = 'files/classifier/base_impartial.csv'
     BASE_PARTIAL = 'files/classifier/base_partial.csv'
 
@@ -494,5 +496,51 @@ def populateNaiveBayes(classifierService):
         baseNaiveBayes.writerow([ row[0], type ])
         
     csvNaiveBayes.close()
+
+def analytics(classifierService):
+    csvAnalytics = open(Base.BASE_ANALYTICS, 'w', encoding='utf-8', newline='')
+    baseAnalytics = csv.writer(csvAnalytics, delimiter=';')
+
+    readBASE = csv.reader(open(Base.BASE, 'r', encoding='utf-8'), delimiter=';')
+    base = list(readBASE)
+    countBase = len(base)
+
+    groundTruth = list(zip(*getBase(Base.URL_GROUND_TRUTH)))
+
+    for row in base:
+        rowAnalytics = []
+
+        countBase = countBase - 1
+        textSize = len(row[0])
+        title = row[0].split(' -')[0]
+
+        tagNaiveBayes = classifierService.classifySentence(row[0])
+
+        tagTruth = None
+
+        if(row[5] in groundTruth[1]):
+            key = groundTruth[1].index(row[5])
+            tagTruth = groundTruth[0][key]
+
+        rowAnalytics = [
+            row[0], # Text
+            title,
+            tagTruth,
+            tagNaiveBayes,
+            row[1], # Tag - SentiStrength
+            row[2], # positive - SentiStrength
+            row[3], # negative - SentiStrength
+            row[4], # neltral - SentiStrength
+            row[5], # link
+            row[6], # origem
+            row[7], # id
+            row[8], # length - word_tokenize
+            row[9], # count_neutral_words
+            textSize
+        ]
         
+        baseAnalytics.writerow( rowAnalytics )
+        print(str(countBase) + "     -     " + title)
+
+    csvAnalytics.close()
     
