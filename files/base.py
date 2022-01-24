@@ -17,6 +17,8 @@ class Base():
     BASE = 'files/classifier/base.csv'
     BASE_ANALYTICS = 'files/classifier/base_analytics.csv'
 
+    FILE_FINAL = 'files/base_analytics.csv'
+
     BASE_IMPARTIAL = 'files/classifier/base_impartial.csv'
     BASE_PARTIAL = 'files/classifier/base_partial.csv'
 
