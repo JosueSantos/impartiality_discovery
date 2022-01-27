@@ -34,7 +34,7 @@ Utilizando o conceito modular de organização, o projeto foi dividido em partes
 - scriptExtractor.py
 - scriptBuildData.py
 - scriptClassifier.py
-- scriptPopulateNaiveBayes.py
+- scriptPopulateAnalytics.py
 
 ## Coleta de Dados
 
@@ -273,18 +273,16 @@ classifierService.distributionProbSentence(text)
 
 ## Após a geração do Modelo
 
-Para observar a analise destas bases e da acurácia do modelo Naive Bayes veja o notebook **analytics.ipynb**..
-
-Após a geração do Modelo baseado no Naive Bayes, execute o **scriptPopulateNaiveBayes**. Que irá avaliar novamente toda a base e criar um novo arquivo de teste. Este arquivo será utilizado em outra aplicação para aprimorar ainda mais a acurácia do modelo utilizando tecnicas de word embedding.
+Após a geração do Modelo baseado no Naive Bayes, execute o **scriptPopulateAnalytics**. Que irá avaliar novamente toda a base e criar um novo arquivo de treinamento. Este arquivo será utilizado em outra aplicação para aprimorar ainda mais a acurácia do modelo utilizando tecnicas de word embedding.
 
 O sentido deste processo consiste em sempre melhorar a base de dados rotulada automaticamente, para que o próximo modelo gerado tenha uma acurácia ainda melhor.
 
-A base rotulada pela ferramenta SentiStrength obteve uma acurácia de 56%, quando comparada com a base rotulada por humanos (base ground truth).
+A base rotulada pela ferramenta SentiStrength obteve uma acurácia de 57%, quando comparada com a base rotulada por humanos (base ground truth).
 
-Já o modelo criado pelo NaiveBayes obteve uma acurácia de 77%, porém observando os rotulos separadamente, percebemos que a acertividade para nóticias imparciais foi de 93% quanto para nóticias parciais foi de apenas 23%. Necessitando de uma nova etapa na busca pelo modelo ideal.
+Já o modelo criado pelo NaiveBayes obteve uma acurácia de 73%, porém observando os rotulos separadamente, percebemos que a acertividade para nóticias imparciais foi de 84% quanto para nóticias parciais foi de apenas 33%. Necessitando de uma nova etapa na busca pelo modelo ideal.
 
-Pode-se observar o processo utilizando as tecnicas de word embedding no notebook **ImpartialityDiscovery.ipynb**
+Pode-se observar o processo utilizando as tecnicas de word embedding no notebook **ImpartialityDiscovery2021.ipynb**
 
-Com o Word Embedding foi possível ter uma melhora no modelo. Apesar da acurácia total ter caído para 74%, a acertividade de notícias imparciais foi para 75% e a das parciais subiu para 68%. Tornando assim um modelo muito mais confiável do que os anteriores.
+Com o Word Embedding foi possível ter uma melhora no modelo. Com acurácia total de 77%, a acertividade de notícias imparciais foi para 84% e a das parciais subiu para 51%. Tornando assim um modelo muito mais confiável do que os anteriores.
 
 

@@ -17,7 +17,7 @@ class Base():
     BASE = 'files/classifier/base.csv'
     BASE_ANALYTICS = 'files/classifier/base_analytics.csv'
 
-    FILE_FINAL = 'files/base_analytics.csv'
+    FILE_FINAL = 'files/base_analytics_final.csv'
 
     BASE_IMPARTIAL = 'files/classifier/base_impartial.csv'
     BASE_PARTIAL = 'files/classifier/base_partial.csv'
@@ -523,26 +523,28 @@ def analytics(classifierService):
         if(row[5] in groundTruth[1]):
             key = groundTruth[1].index(row[5])
             tagTruth = groundTruth[0][key]
-
-        rowAnalytics = [
-            row[0], # Text
-            title,
-            tagTruth,
-            tagNaiveBayes,
-            row[1], # Tag - SentiStrength
-            row[2], # positive - SentiStrength
-            row[3], # negative - SentiStrength
-            row[4], # neltral - SentiStrength
-            row[5], # link
-            row[6], # origem
-            row[7], # id
-            row[8], # length - word_tokenize
-            row[9], # count_neutral_words
-            textSize
-        ]
         
-        baseAnalytics.writerow( rowAnalytics )
-        print(str(countBase) + "     -     " + title)
+        if(row[5]):
+            rowAnalytics = [
+                row[0], # Text
+                title,
+                tagTruth,
+                tagNaiveBayes,
+                row[1], # Tag - SentiStrength
+                row[2], # positive - SentiStrength
+                row[3], # negative - SentiStrength
+                row[4], # neltral - SentiStrength
+                row[5], # link
+                row[6], # origem
+                row[7], # id
+                row[8], # length - word_tokenize
+                row[9], # count_neutral_words
+                textSize
+            ]
+            
+            baseAnalytics.writerow( rowAnalytics )
+
+            print(str(countBase) + "     -     " + title)
 
     csvAnalytics.close()
     

@@ -5,3 +5,5 @@ __pycache__
 /files/classifier/base_impartial.csv
 /files/classifier/base_partial.csv
 /files/classifier/base_test.csv
+/files/base_analytics.csv
+/files/base_analytics_final.csv
